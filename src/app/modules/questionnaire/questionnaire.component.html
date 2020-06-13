@@ -1,0 +1,24 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1">
+            <button (click)="goPrev()" [disabled]="!isEnabledPrev">
+                <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+        </div>
+        <div class="col-md-10">
+            <mat-card>
+                <span>{{questionnaireObj.questionText}}</span>
+                <ul>
+                    <li *ngFor="let option of questionnaireObj.options">
+                        <mat-card id="options">{{option}}</mat-card>
+                    </li>
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-1">
+            <button (click)="goNext()" [disabled]="!isEnabledNext">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>
