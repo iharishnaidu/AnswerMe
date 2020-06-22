@@ -28,6 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material';
 import { MatDatepickerModule } from '@angular/material';
 import { MatNativeDateModule } from '@angular/material';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    MatProgressBarModule
   ],
   exports: [
     MatCardModule,
@@ -84,7 +86,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    MatProgressBarModule
   ],
   declarations: []
 })

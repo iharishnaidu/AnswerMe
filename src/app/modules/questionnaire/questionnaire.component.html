@@ -1,22 +1,23 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-1">
-            <button (click)="goPrev()" [disabled]="!isEnabledPrev">
+            <button mat-icon-button (click)="goPrev()" [disabled]="!isEnabledPrev">
                 <mat-icon>keyboard_arrow_left</mat-icon>
             </button>
         </div>
         <div class="col-md-10">
+            <mat-progress-bar mode="determinate" value="{{progressValue}}" bufferValue="30"></mat-progress-bar>
             <mat-card>
                 <span>{{questionnaireObj.questionText}}</span>
                 <ul>
-                    <li *ngFor="let option of questionnaireObj.options">
-                        <mat-card id="options">{{option}}</mat-card>
+                    <li *ngFor="let option of questionnaireObj.options; let i = index">
+                        <button class="optionBtn" [color]="backgroundColor" mat-raised-button (click)="checkAnswer(questionnaireObj.questionId, i)">{{option}}</button>
                     </li>
                 </ul>
             </mat-card>
         </div>
         <div class="col-md-1">
-            <button (click)="goNext()" [disabled]="!isEnabledNext">
+            <button mat-icon-button (click)="goNext()" [disabled]="!isEnabledNext">
                 <mat-icon>keyboard_arrow_right</mat-icon>
             </button>
         </div>
