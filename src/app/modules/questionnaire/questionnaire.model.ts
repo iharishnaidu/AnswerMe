@@ -1,6 +1,6 @@
 export class Questionnaire
 {
-    public questionId : number;
-    public questionText : string;
-    public topicId : number;
+    public QuestionID : number;
+    public QuestionText : string;
+    public TopicId : number;
 }

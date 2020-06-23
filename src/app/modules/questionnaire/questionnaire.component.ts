@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Questionnaire } from './questionnaire.model';
 import { HttpClient } from '@angular/common/http';
 import { Options } from './options.model';
+import 'rxjs/Rx';
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'app-questionnaire',
@@ -20,10 +22,11 @@ export class QuestionnaireComponent implements OnInit {
   backgroundColor: string;
   progressValue : number;
   apiQuestions : string = "https://localhost:44376/api/tbl_Questions";
-  apiOptions : string = "https://localhost:44376/api/tbl_Options/Gettbl_OptionsByQuestionId";
+  apiOptions : string = "https://localhost:44376/api/tbl_Options/Gettbl_OptionsByQuestionId/";
 
   questionnaireArr: Questionnaire[] = [];
   optionsforQuesIdArr : Options[];
+  myvar : any;
 
   ngOnInit() {
     //this.questionnaireObj = this.questionnaireArr[this.arrIndex];
@@ -32,30 +35,29 @@ export class QuestionnaireComponent implements OnInit {
     this.isEnabledNext = true;
     this.progressValue = 33.33;
     this.loadQuestions();
-    this.loadOptionsForQuestion(this.questionnaireArr);
+    //this.loadOptionsForQuestion(this.questionnaireArr);
   }
 
   loadQuestions() {
     console.log("Inside Load Questions");
     //subscribe to observable returned from Question API endpoint
-    this.http.get(this.apiQuestions).subscribe(response => {
-      this.questionnaireArr = response as Questionnaire[];
-      console.log("QuesArr Inside Load Questions : " + this.questionnaireArr);
-    });
-  }
+    this.http.get(this.apiQuestions).subscribe(res => 
+      {
+        this.questionnaireArr = res as Questionnaire[];
+        console.log(this.questionnaireArr);
 
-  loadOptionsForQuestion(quesArr: Questionnaire[]) {
-    console.log("Inside Load Options");
-    console.log("QuesArr Inside Load Options : " + quesArr);
-    quesArr.forEach(ques => {
-      this.apiOptions = this.apiOptions.concat(ques.questionId.toString());
-      console.log(ques);
-      //subscribe to observable returned from Option API endpoint
-      this.http.get(this.apiOptions).subscribe(response => {
-        this.optionsforQuesIdArr = response as Options[];
-        console.log(this.optionsforQuesIdArr);
+        this.questionnaireArr.forEach(ques => {
+          this.questionnaireObj = ques as Questionnaire;
+          console.log(this.questionnaireObj);
+          console.log(this.questionnaireObj.QuestionID);
+          this.apiOptions = this.apiOptions.concat(ques.QuestionID.toString());
+          //subscribe to observable returned from Option API endpoint
+          this.http.get(this.apiOptions).subscribe(response => {
+            this.optionsforQuesIdArr = response as Options[];
+            console.log(this.optionsforQuesIdArr);
+          });
+        });
       });
-    });
   }
 
   goPrev() {

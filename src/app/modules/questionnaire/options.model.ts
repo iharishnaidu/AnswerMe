@@ -1,7 +1,7 @@
 export class Options
 {
-    public optionId : number;
-    public questionId : number;
-    public optionText : string;
-    public isAnswer : boolean;
+    public OptionId : number;
+    public QuestionId : number;
+    public OptionText : string;
+    public IsAnswer : boolean;
 }
