@@ -6,14 +6,20 @@
             </button>
         </div>
         <div class="col-md-10">
-            <mat-progress-bar mode="determinate" value="{{progressValue}}" bufferValue="30"></mat-progress-bar>
-            <mat-card>
-                <span>{{questionnaireObj.QuestionText}}</span>
+            <mat-progress-bar mode="determinate" value="{{progressValue}}"></mat-progress-bar>
+            <mat-card *ngIf="!isLastQues">
+                <span>{{questionnaireObj.questionText}}</span>
                 <ul>
-                    <li *ngFor="let option of optionsforQuesIdArr; let i = index">
-                        <button class="optionBtn" [color]="backgroundColor" mat-raised-button (click)="checkAnswer(questionnaireObj.QuestionID, i)">{{option.OptionText}}</button>
+                    <li *ngFor="let option of questionnaireObj.options; let i = index">
+                        <button class="optionBtn" [ngStyle]="{'backgroundColor': backgroundColor}" (click)="checkAnswer(questionnaireObj.questionID,option.optionID,i)" mat-raised-button>{{option.optionText}}</button>
                     </li>
                 </ul>
+            </mat-card>
+            <mat-card *ngIf="isLastQues">
+                <mat-card-content>
+                    Quiz complete. 
+                    <span>Score : {{marksCounter}}/{{noOfQues}}</span>
+                </mat-card-content>
             </mat-card>
         </div>
         <div class="col-md-1">

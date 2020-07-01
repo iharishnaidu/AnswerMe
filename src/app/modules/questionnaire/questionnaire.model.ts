@@ -1,6 +1,9 @@
+import { Options } from './options.model';
+
 export class Questionnaire
 {
-    public QuestionID : number;
-    public QuestionText : string;
-    public TopicId : number;
+    public questionID : number;
+    public questionText : string;
+    //public TopicID : number;
+    public options : Options[];
 }

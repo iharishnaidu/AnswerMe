@@ -16,75 +16,70 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   questionnaireObj: Questionnaire;
-  arrIndex: number = 0;
+  quesIndex: number = 0;
   isEnabledPrev: boolean;
   isEnabledNext: boolean;
   backgroundColor: string;
   progressValue : number;
-  apiQuestions : string = "https://localhost:44376/api/tbl_Questions";
-  apiOptions : string = "https://localhost:44376/api/tbl_Options/Gettbl_OptionsByQuestionId/";
-
+  //apiQuestions : string = "https://answer-me.cfapps.io/questions/all";
+  apiQuestions : string = "http://localhost:8080/questions/all";
   questionnaireArr: Questionnaire[] = [];
-  optionsforQuesIdArr : Options[];
-  myvar : any;
+  noOfQues : number;
+  isLastQues : boolean;
+  marksCounter : number;
 
   ngOnInit() {
-    //this.questionnaireObj = this.questionnaireArr[this.arrIndex];
-    //console.log(this.questionnaireObj);
+    this.isLastQues = false;
     this.isEnabledPrev = false;
     this.isEnabledNext = true;
-    this.progressValue = 33.33;
+    this.progressValue = 0;
+    this.marksCounter = 0;
     this.loadQuestions();
-    //this.loadOptionsForQuestion(this.questionnaireArr);
   }
 
   loadQuestions() {
     console.log("Inside Load Questions");
     //subscribe to observable returned from Question API endpoint
-    this.http.get(this.apiQuestions).subscribe(res => 
-      {
-        this.questionnaireArr = res as Questionnaire[];
-        console.log(this.questionnaireArr);
-
-        this.questionnaireArr.forEach(ques => {
-          this.questionnaireObj = ques as Questionnaire;
-          console.log(this.questionnaireObj);
-          console.log(this.questionnaireObj.QuestionID);
-          this.apiOptions = this.apiOptions.concat(ques.QuestionID.toString());
-          //subscribe to observable returned from Option API endpoint
-          this.http.get(this.apiOptions).subscribe(response => {
-            this.optionsforQuesIdArr = response as Options[];
-            console.log(this.optionsforQuesIdArr);
-          });
-        });
+    this.http.get(this.apiQuestions).subscribe(res => {
+      this.questionnaireArr = res as Questionnaire[];
+      console.log(this.questionnaireArr);
+      this.noOfQues = this.questionnaireArr.length;
+      console.log(this.quesIndex);
+      this.questionnaireArr.forEach(ques => {
+        this.questionnaireObj = ques as Questionnaire;
+        this.questionnaireObj = this.questionnaireArr[this.quesIndex];
+        console.log(this.questionnaireObj);
       });
+    });
   }
 
   goPrev() {
-    if (this.arrIndex > 0) {
-      this.arrIndex = this.arrIndex - 1;
-      this.questionnaireObj = this.questionnaireArr[this.arrIndex];
+    if (this.quesIndex > 0) {
+      this.quesIndex = this.quesIndex - 1;
+      this.questionnaireObj = this.questionnaireArr[this.quesIndex];
     }
-    this.progressValue = this.progressValue - 33.33;
+    this.progressValue = this.progressValue - (100/this.noOfQues);
     this.disabled();
   }
 
   goNext() {
-    if (this.arrIndex < this.questionnaireArr.length - 1) {
-      this.arrIndex = this.arrIndex + 1;
-      this.questionnaireObj = this.questionnaireArr[this.arrIndex];
+    if (this.quesIndex < this.questionnaireArr.length + 1) {
+      this.quesIndex = this.quesIndex + 1;
+      this.questionnaireObj = this.questionnaireArr[this.quesIndex];
     }
-    this.progressValue = this.progressValue + 33.33;
+    this.progressValue = this.progressValue + (100/this.noOfQues);
     this.disabled();
   }
 
   disabled() {
-    if (this.arrIndex <= 0) {
+    if (this.quesIndex <= 0) {
       this.isEnabledPrev = false;
       this.isEnabledNext = true;
+      this.isLastQues = false;
     }
 
-    else if (this.arrIndex == this.questionnaireArr.length - 1) {
+    else if (this.quesIndex == this.questionnaireArr.length) {
+      this.isLastQues = true;
       this.isEnabledNext = false;
       this.isEnabledPrev = true;
     }
@@ -92,20 +87,25 @@ export class QuestionnaireComponent implements OnInit {
     else {
       this.isEnabledPrev = true;
       this.isEnabledNext = true;
+      this.isLastQues = false;
     }
   }
 
-  checkAnswer(questionID : number, index : number)
+  checkAnswer(questionID : number, optionID: number, index : number)
   {
-    // if(this.questionnaireArr[questionID].correctAnswer == index)
-    // {
-    //   console.log("Right answer");
-    //   this.questionnaireArr[questionID]
-    // }
-    // else
-    // {
-    //   console.log("Wrong answer");
-    //   this.backgroundColor = "warn";
-    // }
+    console.log("Question ID : " + questionID);
+    console.log("Option ID :" + optionID);
+    console.log("Index : " +index);
+    if(this.questionnaireObj.options[index].answer == true)
+    {
+      console.log("Correct answer");
+      this.marksCounter += 1;
+      //this.backgroundColor = "green";
+    }
+    else
+    {
+      console.log("Wrong answer");
+      //this.backgroundColor = "red";
+    }
   }
 }
