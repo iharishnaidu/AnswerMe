@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Options } from './options.model';
 import 'rxjs/Rx';
 import { map } from "rxjs/operators";
+import { Topic } from './topic.model';
 
 @Component({
   selector: 'app-questionnaire',
@@ -15,18 +16,25 @@ export class QuestionnaireComponent implements OnInit {
   constructor(private http : HttpClient) { 
   }
 
-  questionnaireObj: Questionnaire;
+  questionnaireObj: Questionnaire = new Questionnaire();
+  topicObj : Topic = new Topic();
   quesIndex: number = 0;
   isEnabledPrev: boolean;
   isEnabledNext: boolean;
   backgroundColor: string;
   progressValue : number;
-  //apiQuestions : string = "https://answer-me.cfapps.io/questions/all";
-  apiQuestions : string = "http://localhost:8080/questions/all";
+  apiQuestions : string = "https://answer-me.cfapps.io/questions/all";
+  apiTopics : string = "https://answer-me.cfapps.io/topic/";
+  //apiQuestions : string = "http://localhost:8080/questions/all";
   questionnaireArr: Questionnaire[] = [];
   noOfQues : number;
   isLastQues : boolean;
+  isTopicSelected : boolean;
+  isQuizStarted : boolean;
+  isStartQuizClicked : boolean;
   marksCounter : number;
+  topicsArr: Topic[] = [];
+  topicIDSelected : number;
 
   ngOnInit() {
     this.isLastQues = false;
@@ -34,23 +42,43 @@ export class QuestionnaireComponent implements OnInit {
     this.isEnabledNext = true;
     this.progressValue = 0;
     this.marksCounter = 0;
-    this.loadQuestions();
+    this.isTopicSelected = false;
+    this.isQuizStarted = false;
+    this.isStartQuizClicked = false;
+    this.loadTopics();
+    //this.loadQuestions();
   }
 
-  loadQuestions() {
-    console.log("Inside Load Questions");
-    //subscribe to observable returned from Question API endpoint
-    this.http.get(this.apiQuestions).subscribe(res => {
-      this.questionnaireArr = res as Questionnaire[];
-      console.log(this.questionnaireArr);
-      this.noOfQues = this.questionnaireArr.length;
-      console.log(this.quesIndex);
-      this.questionnaireArr.forEach(ques => {
-        this.questionnaireObj = ques as Questionnaire;
-        this.questionnaireObj = this.questionnaireArr[this.quesIndex];
-        console.log(this.questionnaireObj);
+  loadTopics()
+  {
+    let apiEndpoint = this.apiTopics.concat("all");
+    this.http.get(apiEndpoint).subscribe(res => {
+      this.topicsArr = res as Topic[];
+    })
+  }
+
+  topicClick(topicID : number)
+  {
+    this.topicIDSelected = topicID;
+    this.isTopicSelected = true;
+  }
+
+  getQuestionsByTopic()
+  {
+    this.isQuizStarted = true;
+    this.isStartQuizClicked = true;
+    let apiEndpoint = this.apiTopics.concat(this.topicIDSelected.toString());
+    this.http.get(apiEndpoint).subscribe(res =>
+      {
+        this.topicObj = res as Topic;
+        this.questionnaireArr = this.topicObj.questionsList as Questionnaire[];
+        console.log(this.questionnaireArr);
+        this.questionnaireArr.forEach(ques => {
+          this.questionnaireObj = ques as Questionnaire;
+          this.questionnaireObj = this.questionnaireArr[this.quesIndex];
+          console.log(this.questionnaireObj);
+        });
       });
-    });
   }
 
   goPrev() {

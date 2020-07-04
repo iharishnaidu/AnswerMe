@@ -9,6 +9,19 @@ import { QuestionnaireComponent } from './modules/questionnaire/questionnaire.co
 import { NavbarComponent } from './modules/navbar/navbar.component';
 import { HeaderComponent } from './modules/header/header.component';
 import { HttpClientModule } from '@angular/common/http';
+import {
+  OKTA_CONFIG,
+  OktaAuthModule,
+} from '@okta/okta-angular';
+
+
+const config = {
+  clientId: '0oaifrq9yQym6Q3pj4x6',
+  issuer: 'https://dev-741648.okta.com/oauth2/default',
+  redirectUri: 'http://localhost:4200/implicit/callback',
+  scopes: ['openid', 'profile', 'email'],
+  pkce: true
+};
 
 @NgModule({
   declarations: [
@@ -22,9 +35,10 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    OktaAuthModule
   ],
-  providers: [],
+  providers: [{ provide: OKTA_CONFIG, useValue: config }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

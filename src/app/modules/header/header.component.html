@@ -1,1 +1,14 @@
-<p>header works!</p>
+<div class = "container">
+    <div class = "row">
+        <div class="col-md-1">
+            <button mat-icon-button *ngIf="!isAuthenticated" (click)="login()">
+                <mat-icon>login</mat-icon>
+            </button>
+        </div>
+        <div class="col-md-1">
+            <button mat-icon-button *ngIf="isAuthenticated" (click)="logout()">Logout
+                <!-- <mat-icon>login</mat-icon> -->
+            </button>
+        </div>
+    </div>
+</div>

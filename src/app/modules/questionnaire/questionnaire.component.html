@@ -1,7 +1,30 @@
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" *ngIf="!isTopicSelected">
+        <div class="col-md-12">
+            <mat-card>
+                <mat-card-content>
+                    Select Topic
+                    <ul>
+                        <li *ngFor="let topic of topicsArr; let i = index">
+                            <button class="topicBtn" (click)="topicClick(topic.topicID)" mat-raised-button>{{topic.topicName}}</button>
+                        </li>
+                    </ul>
+                </mat-card-content>
+            </mat-card>
+        </div>  
+    </div>
+    <div class="row" *ngIf="isTopicSelected && !isQuizStarted">
+        <div class="col-md-12">
+            <mat-card>
+                <mat-card-content>
+                    <button class="topicBtn" (click)="getQuestionsByTopic()" mat-raised-button>Start Quiz</button>
+                </mat-card-content>
+            </mat-card>
+        </div>  
+    </div>
+    <div class="row" *ngIf="isStartQuizClicked">
         <div class="col-md-1">
-            <button mat-icon-button (click)="goPrev()" [disabled]="!isEnabledPrev">
+            <button *ngIf="!isLastQues" mat-icon-button (click)="goPrev()" [disabled]="!isEnabledPrev">
                 <mat-icon>keyboard_arrow_left</mat-icon>
             </button>
         </div>
@@ -23,7 +46,7 @@
             </mat-card>
         </div>
         <div class="col-md-1">
-            <button mat-icon-button (click)="goNext()" [disabled]="!isEnabledNext">
+            <button *ngIf="!isLastQues" mat-icon-button (click)="goNext()" [disabled]="!isEnabledNext">
                 <mat-icon>keyboard_arrow_right</mat-icon>
             </button>
         </div>

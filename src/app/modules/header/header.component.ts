@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OktaAuthService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  isAuthenticated: boolean;
 
-  ngOnInit() {
+  constructor(public oktaAuth: OktaAuthService) { 
+    // Subscribe to authentication state changes
+    this.oktaAuth.$authenticationState.subscribe(
+      (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
+    );
+  }
+
+  async ngOnInit() {
+    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+  }
+
+  login()
+  {
+    this.oktaAuth.loginRedirect('/questionnaire');
+  }
+
+  logout() {
+    this.oktaAuth.logout('/');
   }
 
 }
