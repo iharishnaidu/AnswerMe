@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, wtfStartTimeRange } from '@angular/core';
 import { Questionnaire } from './questionnaire.model';
 import { HttpClient } from '@angular/common/http';
 import { Options } from './options.model';
 import 'rxjs/Rx';
 import { map } from "rxjs/operators";
 import { Topic } from './topic.model';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-questionnaire',
@@ -16,25 +17,31 @@ export class QuestionnaireComponent implements OnInit {
   constructor(private http : HttpClient) { 
   }
 
-  questionnaireObj: Questionnaire = new Questionnaire();
+  questionnaireObj : Questionnaire = new Questionnaire();
   topicObj : Topic = new Topic();
+  questionnaireArr : Questionnaire[] = [];
+  topicsArr : Topic[] = [];
+  selectedAnswerByQuesId = new Map();
+
   quesIndex: number = 0;
-  isEnabledPrev: boolean;
-  isEnabledNext: boolean;
   backgroundColor: string;
   progressValue : number;
-  apiQuestions : string = "https://answer-me.cfapps.io/questions/all";
-  apiTopics : string = "https://answer-me.cfapps.io/topic/";
-  //apiQuestions : string = "http://localhost:8080/questions/all";
-  questionnaireArr: Questionnaire[] = [];
   noOfQues : number;
+  marksCounter : number;
+  topicIDSelected : number;
+
+  isEnabledPrev: boolean;
+  isEnabledNext: boolean;
   isLastQues : boolean;
   isTopicSelected : boolean;
   isQuizStarted : boolean;
   isStartQuizClicked : boolean;
-  marksCounter : number;
-  topicsArr: Topic[] = [];
-  topicIDSelected : number;
+  isEvaluated : boolean;
+  
+
+  apiQuestions : string = "https://answer-me.cfapps.io/questions/all";
+  apiTopics : string = "https://answer-me.cfapps.io/topic/";
+  //apiQuestions : string = "http://localhost:8080/questions/all";
 
   ngOnInit() {
     this.isLastQues = false;
@@ -45,6 +52,7 @@ export class QuestionnaireComponent implements OnInit {
     this.isTopicSelected = false;
     this.isQuizStarted = false;
     this.isStartQuizClicked = false;
+    this.isEvaluated = false;
     this.loadTopics();
     //this.loadQuestions();
   }
@@ -72,6 +80,7 @@ export class QuestionnaireComponent implements OnInit {
       {
         this.topicObj = res as Topic;
         this.questionnaireArr = this.topicObj.questionsList as Questionnaire[];
+        this.noOfQues = this.questionnaireArr.length;
         console.log(this.questionnaireArr);
         this.questionnaireArr.forEach(ques => {
           this.questionnaireObj = ques as Questionnaire;
@@ -91,6 +100,7 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   goNext() {
+    console.log(this.questionnaireArr);
     if (this.quesIndex < this.questionnaireArr.length + 1) {
       this.quesIndex = this.quesIndex + 1;
       this.questionnaireObj = this.questionnaireArr[this.quesIndex];
@@ -119,21 +129,45 @@ export class QuestionnaireComponent implements OnInit {
     }
   }
 
-  checkAnswer(questionID : number, optionID: number, index : number)
+  submitAnswer(questionID : number, optionID: number, index : number)
   {
     console.log("Question ID : " + questionID);
     console.log("Option ID :" + optionID);
     console.log("Index : " +index);
-    if(this.questionnaireObj.options[index].answer == true)
-    {
-      console.log("Correct answer");
-      this.marksCounter += 1;
+
+     this.selectedAnswerByQuesId[questionID] = this.questionnaireObj.options[index].optionID;
+     console.log(this.selectedAnswerByQuesId);
+
+    // if(this.questionnaireObj.options[index].answer == true)
+    // {
+    //   console.log("Correct answer");
+    //   this.marksCounter += 1;
       //this.backgroundColor = "green";
-    }
-    else
-    {
-      console.log("Wrong answer");
+    // }
+    // else
+    // {
+    //   console.log("Wrong answer");
       //this.backgroundColor = "red";
-    }
+    //}
+    //console.log(this.questionnaireArr);
+    //setTimeout(this.goNext, 3000);
+  }
+
+  evaluateQuiz()
+  {
+    for (var m in this.selectedAnswerByQuesId) {
+      console.log("map element");
+      console.log(m);
+      //console.log(Array.from(this.selectedAnswerByQuesId).map(m);
+        for (var j = 0; j < this.questionnaireArr.length; j++) {
+          console.log(this.questionnaireArr[j].questionID);
+          if (this.questionnaireArr[j].questionID.toString() == m) {
+            this.questionnaireArr[j].options.forEach(option => {
+              //if(option.optionID == )
+            })
+          }
+        }
+    }  
+    this.isEvaluated = true;
   }
 }

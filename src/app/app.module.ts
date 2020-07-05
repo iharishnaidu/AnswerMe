@@ -13,6 +13,7 @@ import {
   OKTA_CONFIG,
   OktaAuthModule,
 } from '@okta/okta-angular';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 const config = {
@@ -29,6 +30,7 @@ const config = {
     QuestionnaireComponent,
     NavbarComponent,
     HeaderComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,

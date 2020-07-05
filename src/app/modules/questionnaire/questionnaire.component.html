@@ -34,11 +34,14 @@
                 <span>{{questionnaireObj.questionText}}</span>
                 <ul>
                     <li *ngFor="let option of questionnaireObj.options; let i = index">
-                        <button class="optionBtn" [ngStyle]="{'backgroundColor': backgroundColor}" (click)="checkAnswer(questionnaireObj.questionID,option.optionID,i)" mat-raised-button>{{option.optionText}}</button>
+                        <button class="optionBtn" [ngStyle]="{'backgroundColor': backgroundColor}" (click)="submitAnswer(questionnaireObj.questionID,option.optionID,i)" mat-raised-button>{{option.optionText}}</button>
                     </li>
                 </ul>
             </mat-card>
-            <mat-card *ngIf="isLastQues">
+            
+            <button *ngIf="isLastQues && !isEvaluated" class="optionBtn" (click)="evaluateQuiz()" mat-raised-button>Evaluate</button>
+
+            <mat-card *ngIf="isEvaluated">
                 <mat-card-content>
                     Quiz complete. 
                     <span>Score : {{marksCounter}}/{{noOfQues}}</span>

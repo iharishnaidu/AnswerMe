@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
 
   login()
   {
-    this.oktaAuth.loginRedirect('/questionnaire');
+    this.oktaAuth.loginRedirect('/dashboard');
   }
 
   logout() {
