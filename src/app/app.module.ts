@@ -14,6 +14,7 @@ import {
   OktaAuthModule,
 } from '@okta/okta-angular';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { QuizreviewComponent } from './quizreview/quizreview.component';
 
 
 const config = {
@@ -31,6 +32,7 @@ const config = {
     NavbarComponent,
     HeaderComponent,
     DashboardComponent,
+    QuizreviewComponent,
   ],
   imports: [
     BrowserModule,

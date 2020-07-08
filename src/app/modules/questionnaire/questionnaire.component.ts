@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { Topic } from './topic.model';
 import { timer } from 'rxjs';
 import { Router } from '@angular/router';
+import { QuestionnaireserviceService } from 'src/app/shared/services/questionnaireservice.service';
 
 @Component({
   selector: 'app-questionnaire',
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
 })
 export class QuestionnaireComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private questionnaireservice : QuestionnaireserviceService, private router: Router) {
   }
 
   questionnaireObj: Questionnaire = new Questionnaire();
@@ -59,10 +60,10 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   loadTopics() {
-    let apiEndpoint = this.apiTopics.concat("all");
-    this.http.get(apiEndpoint).subscribe(res => {
-      this.topicsArr = res as Topic[];
-    })
+   this.questionnaireservice.getTopics().then(res => {
+    this.topicsArr = res as Topic[];
+    console.log(this.topicsArr);
+   });
   }
 
   topicClick(topicID: number) {
@@ -70,20 +71,17 @@ export class QuestionnaireComponent implements OnInit {
     this.isTopicSelected = true;
   }
 
-  getQuestionsByTopic() {
+  async getQuestionsByTopic() {
     this.isQuizStarted = true;
     this.isStartQuizClicked = true;
-    let apiEndpoint = this.apiTopics.concat(this.topicIDSelected.toString());
-    this.http.get(apiEndpoint).subscribe(res => {
-      this.topicObj = res as Topic;
-      this.questionnaireArr = this.topicObj.questionsList as Questionnaire[];
-      this.noOfQues = this.questionnaireArr.length;
+    await this.questionnaireservice.getQuestionsByTopicId(this.topicIDSelected).then(res => {
+      this.questionnaireArr = res as Questionnaire[];
       console.log(this.questionnaireArr);
-      this.questionnaireArr.forEach(ques => {
-        this.questionnaireObj = ques as Questionnaire;
-        this.questionnaireObj = this.questionnaireArr[this.quesIndex];
-        console.log(this.questionnaireObj);
-      });
+    });
+    this.questionnaireArr.forEach(ques => {
+      this.questionnaireObj = ques as Questionnaire;
+      this.questionnaireObj = this.questionnaireArr[this.quesIndex];
+      console.log(this.questionnaireObj);
     });
   }
 
