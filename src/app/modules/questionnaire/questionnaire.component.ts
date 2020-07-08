@@ -6,6 +6,7 @@ import 'rxjs/Rx';
 import { map } from "rxjs/operators";
 import { Topic } from './topic.model';
 import { timer } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-questionnaire',
@@ -14,33 +15,33 @@ import { timer } from 'rxjs';
 })
 export class QuestionnaireComponent implements OnInit {
 
-  constructor(private http : HttpClient) { 
+  constructor(private http: HttpClient, private router: Router) {
   }
 
-  questionnaireObj : Questionnaire = new Questionnaire();
-  topicObj : Topic = new Topic();
-  questionnaireArr : Questionnaire[] = [];
-  topicsArr : Topic[] = [];
+  questionnaireObj: Questionnaire = new Questionnaire();
+  topicObj: Topic = new Topic();
+  questionnaireArr: Questionnaire[] = [];
+  topicsArr: Topic[] = [];
   selectedAnswerByQuesId = new Map();
 
   quesIndex: number = 0;
   backgroundColor: string;
-  progressValue : number;
-  noOfQues : number;
-  marksCounter : number;
-  topicIDSelected : number;
+  progressValue: number;
+  noOfQues: number;
+  marksCounter: number;
+  topicIDSelected: number;
 
   isEnabledPrev: boolean;
   isEnabledNext: boolean;
-  isLastQues : boolean;
-  isTopicSelected : boolean;
-  isQuizStarted : boolean;
-  isStartQuizClicked : boolean;
-  isEvaluated : boolean;
-  
+  isLastQues: boolean;
+  isTopicSelected: boolean;
+  isQuizStarted: boolean;
+  isStartQuizClicked: boolean;
+  isEvaluated: boolean;
 
-  apiQuestions : string = "https://answer-me.cfapps.io/questions/all";
-  apiTopics : string = "https://answer-me.cfapps.io/topic/";
+
+  apiQuestions: string = "https://answer-me.cfapps.io/questions/all";
+  apiTopics: string = "https://answer-me.cfapps.io/topic/";
   //apiQuestions : string = "http://localhost:8080/questions/all";
 
   ngOnInit() {
@@ -53,41 +54,37 @@ export class QuestionnaireComponent implements OnInit {
     this.isQuizStarted = false;
     this.isStartQuizClicked = false;
     this.isEvaluated = false;
+    this.selectedAnswerByQuesId = new Map();
     this.loadTopics();
-    //this.loadQuestions();
   }
 
-  loadTopics()
-  {
+  loadTopics() {
     let apiEndpoint = this.apiTopics.concat("all");
     this.http.get(apiEndpoint).subscribe(res => {
       this.topicsArr = res as Topic[];
     })
   }
 
-  topicClick(topicID : number)
-  {
+  topicClick(topicID: number) {
     this.topicIDSelected = topicID;
     this.isTopicSelected = true;
   }
 
-  getQuestionsByTopic()
-  {
+  getQuestionsByTopic() {
     this.isQuizStarted = true;
     this.isStartQuizClicked = true;
     let apiEndpoint = this.apiTopics.concat(this.topicIDSelected.toString());
-    this.http.get(apiEndpoint).subscribe(res =>
-      {
-        this.topicObj = res as Topic;
-        this.questionnaireArr = this.topicObj.questionsList as Questionnaire[];
-        this.noOfQues = this.questionnaireArr.length;
-        console.log(this.questionnaireArr);
-        this.questionnaireArr.forEach(ques => {
-          this.questionnaireObj = ques as Questionnaire;
-          this.questionnaireObj = this.questionnaireArr[this.quesIndex];
-          console.log(this.questionnaireObj);
-        });
+    this.http.get(apiEndpoint).subscribe(res => {
+      this.topicObj = res as Topic;
+      this.questionnaireArr = this.topicObj.questionsList as Questionnaire[];
+      this.noOfQues = this.questionnaireArr.length;
+      console.log(this.questionnaireArr);
+      this.questionnaireArr.forEach(ques => {
+        this.questionnaireObj = ques as Questionnaire;
+        this.questionnaireObj = this.questionnaireArr[this.quesIndex];
+        console.log(this.questionnaireObj);
       });
+    });
   }
 
   goPrev() {
@@ -95,7 +92,7 @@ export class QuestionnaireComponent implements OnInit {
       this.quesIndex = this.quesIndex - 1;
       this.questionnaireObj = this.questionnaireArr[this.quesIndex];
     }
-    this.progressValue = this.progressValue - (100/this.noOfQues);
+    this.progressValue = this.progressValue - (100 / this.noOfQues);
     this.disabled();
   }
 
@@ -105,7 +102,7 @@ export class QuestionnaireComponent implements OnInit {
       this.quesIndex = this.quesIndex + 1;
       this.questionnaireObj = this.questionnaireArr[this.quesIndex];
     }
-    this.progressValue = this.progressValue + (100/this.noOfQues);
+    this.progressValue = this.progressValue + (100 / this.noOfQues);
     this.disabled();
   }
 
@@ -129,45 +126,35 @@ export class QuestionnaireComponent implements OnInit {
     }
   }
 
-  submitAnswer(questionID : number, optionID: number, index : number)
-  {
+  submitAnswer(questionID: number, optionID: number, index: number) {
     console.log("Question ID : " + questionID);
     console.log("Option ID :" + optionID);
-    console.log("Index : " +index);
-
-     this.selectedAnswerByQuesId[questionID] = this.questionnaireObj.options[index].optionID;
-     console.log(this.selectedAnswerByQuesId);
-
-    // if(this.questionnaireObj.options[index].answer == true)
-    // {
-    //   console.log("Correct answer");
-    //   this.marksCounter += 1;
-      //this.backgroundColor = "green";
-    // }
-    // else
-    // {
-    //   console.log("Wrong answer");
-      //this.backgroundColor = "red";
-    //}
-    //console.log(this.questionnaireArr);
-    //setTimeout(this.goNext, 3000);
+    console.log("Index : " + index);
+    this.selectedAnswerByQuesId.set(questionID, this.questionnaireObj.options[index].optionID);
+    console.log(this.selectedAnswerByQuesId);
   }
 
-  evaluateQuiz()
-  {
-    for (var m in this.selectedAnswerByQuesId) {
-      console.log("map element");
-      console.log(m);
-      //console.log(Array.from(this.selectedAnswerByQuesId).map(m);
-        for (var j = 0; j < this.questionnaireArr.length; j++) {
-          console.log(this.questionnaireArr[j].questionID);
-          if (this.questionnaireArr[j].questionID.toString() == m) {
-            this.questionnaireArr[j].options.forEach(option => {
-              //if(option.optionID == )
-            })
-          }
+  evaluateQuiz() {
+    console.log(this.questionnaireArr);
+    for (let [key, value] of this.selectedAnswerByQuesId) {
+      console.log([key, value]);
+      for (var j = 0; j < this.questionnaireArr.length; j++) {
+        console.log(this.questionnaireArr[j].questionID);
+        if (this.questionnaireArr[j].questionID.toString() == key) {
+          this.questionnaireArr[j].options.forEach(option => {
+            if (option.optionID == value && option.answer == true) {
+              console.log("Correct answer");
+              this.marksCounter += 1;
+            }
+          })
         }
-    }  
+      }
+    }
     this.isEvaluated = true;
+  }
+
+  redirectToQuizHomepage()
+  {
+    this.router.navigate(["/questionnaire"]);
   }
 }
