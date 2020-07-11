@@ -2,14 +2,15 @@
     <div class="row" *ngIf="!isTopicSelected">
         <div class="col-md-12">
             <mat-card>
-                <mat-card-content>
+                <!-- <mat-card-content>
                     Select Topic
                     <ul>
                         <li *ngFor="let topic of topicsArr; let i = index">
                             <button class="topicBtn" (click)="topicClick(topic.topicID)" mat-raised-button>{{topic.topicName}}</button>
                         </li>
                     </ul>
-                </mat-card-content>
+                </mat-card-content> -->
+                <button class="topicBtn" (click)="openTopicDialog()">Select Topic</button>
             </mat-card>
         </div>  
     </div>
@@ -49,6 +50,20 @@
                     <button class="optionBtn" (click)="reviewQuiz()" mat-raised-button>Review Quiz</button>
                 </mat-card-content>
             </mat-card>
+
+            <div *ngIf="isReviewQuiz">
+                <div *ngFor="let question of questionnaireArr; let i = index">
+                    <mat-card>
+                        <span>{{questionnaireArr[i].questionText}}</span>
+                        <ul>
+                            <li *ngFor="let option of questionnaireArr[i].options; let j = index">
+                                <span>{{option.optionText}}</span>
+                                <span *ngIf="option.answer"><mat-icon>done</mat-icon></span>
+                            </li>
+                        </ul> 
+                    </mat-card>
+                </div>
+            </div>           
         </div>
         <div class="col-md-1">
             <button *ngIf="!isLastQues" mat-icon-button (click)="goNext()" [disabled]="!isEnabledNext">

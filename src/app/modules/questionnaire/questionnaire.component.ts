@@ -8,6 +8,8 @@ import { Topic } from './topic.model';
 import { timer } from 'rxjs';
 import { Router } from '@angular/router';
 import { QuestionnaireserviceService } from 'src/app/shared/services/questionnaireservice.service';
+import { MatDialog } from '@angular/material';
+import { TopicdialogComponent } from 'src/app/topicdialog/topicdialog.component';
 
 @Component({
   selector: 'app-questionnaire',
@@ -16,7 +18,7 @@ import { QuestionnaireserviceService } from 'src/app/shared/services/questionnai
 })
 export class QuestionnaireComponent implements OnInit {
 
-  constructor(private http: HttpClient, private questionnaireservice : QuestionnaireserviceService, private router: Router) {
+  constructor(private http: HttpClient, private questionnaireservice : QuestionnaireserviceService, private router: Router, public dialog: MatDialog) {
   }
 
   questionnaireObj: Questionnaire = new Questionnaire();
@@ -39,6 +41,7 @@ export class QuestionnaireComponent implements OnInit {
   isQuizStarted: boolean;
   isStartQuizClicked: boolean;
   isEvaluated: boolean;
+  isReviewQuiz: boolean;
 
 
   apiQuestions: string = "https://answer-me.cfapps.io/questions/all";
@@ -55,21 +58,34 @@ export class QuestionnaireComponent implements OnInit {
     this.isQuizStarted = false;
     this.isStartQuizClicked = false;
     this.isEvaluated = false;
+    this.isReviewQuiz = false;
     this.selectedAnswerByQuesId = new Map();
-    this.loadTopics();
+    //this.loadTopics();
   }
 
-  loadTopics() {
-   this.questionnaireservice.getTopics().then(res => {
-    this.topicsArr = res as Topic[];
-    console.log(this.topicsArr);
-   });
+  openTopicDialog()
+  {
+    const dialogRef = this.dialog.open(TopicdialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isTopicSelected = true;
+      this.topicIDSelected = result;
+      console.log(this.topicIDSelected);
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
-  topicClick(topicID: number) {
-    this.topicIDSelected = topicID;
-    this.isTopicSelected = true;
-  }
+  // loadTopics() {
+  //  this.questionnaireservice.getTopics().then(res => {
+  //   this.topicsArr = res as Topic[];
+  //   console.log(this.topicsArr);
+  //  });
+  // }
+
+  // topicClick(topicID: number) {
+  //   this.topicIDSelected = topicID;
+  //   this.isTopicSelected = true;
+  // }
 
   async getQuestionsByTopic() {
     this.isQuizStarted = true;
@@ -78,6 +94,7 @@ export class QuestionnaireComponent implements OnInit {
       this.questionnaireArr = res as Questionnaire[];
       console.log(this.questionnaireArr);
     });
+    this.noOfQues = this.questionnaireArr.length;
     this.questionnaireArr.forEach(ques => {
       this.questionnaireObj = ques as Questionnaire;
       this.questionnaireObj = this.questionnaireArr[this.quesIndex];
@@ -154,5 +171,11 @@ export class QuestionnaireComponent implements OnInit {
   redirectToQuizHomepage()
   {
     this.router.navigate(["/questionnaire"]);
+  }
+
+  reviewQuiz()
+  {
+    console.log("review quiz");
+    this.isReviewQuiz = true;
   }
 }

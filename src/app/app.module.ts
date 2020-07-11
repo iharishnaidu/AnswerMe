@@ -15,6 +15,7 @@ import {
 } from '@okta/okta-angular';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { QuizreviewComponent } from './quizreview/quizreview.component';
+import { TopicdialogComponent } from './topicdialog/topicdialog.component';
 
 
 const config = {
@@ -33,6 +34,7 @@ const config = {
     HeaderComponent,
     DashboardComponent,
     QuizreviewComponent,
+    TopicdialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +45,7 @@ const config = {
     OktaAuthModule
   ],
   providers: [{ provide: OKTA_CONFIG, useValue: config }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [TopicdialogComponent]
 })
 export class AppModule { }
