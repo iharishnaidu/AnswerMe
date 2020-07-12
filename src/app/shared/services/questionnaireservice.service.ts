@@ -9,7 +9,8 @@ import { Questionnaire } from 'src/app/modules/questionnaire/questionnaire.model
 export class QuestionnaireserviceService {
 
   apiQuestions: string = "https://answer-me.cfapps.io/questions/all";
-  apiTopics: string = "https://answer-me.cfapps.io/topic/";
+  // apiTopics: string = "https://answer-me.cfapps.io/topic/";
+  apiTopics: string = "http://localhost:8080/topic/";
   topicsArr: Topic[] = [];
   topicObj : Topic;
   questionnaireArr : Questionnaire[] = [];

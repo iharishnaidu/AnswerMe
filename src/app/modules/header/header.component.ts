@@ -21,13 +21,4 @@ export class HeaderComponent implements OnInit {
     this.isAuthenticated = await this.oktaAuth.isAuthenticated();
   }
 
-  login()
-  {
-    this.oktaAuth.loginRedirect('/dashboard');
-  }
-
-  logout() {
-    this.oktaAuth.logout('/');
-  }
-
 }

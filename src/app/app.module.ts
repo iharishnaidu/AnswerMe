@@ -9,22 +9,11 @@ import { QuestionnaireComponent } from './modules/questionnaire/questionnaire.co
 import { NavbarComponent } from './modules/navbar/navbar.component';
 import { HeaderComponent } from './modules/header/header.component';
 import { HttpClientModule } from '@angular/common/http';
-import {
-  OKTA_CONFIG,
-  OktaAuthModule,
-} from '@okta/okta-angular';
+import { OktaAuthModule } from '@okta/okta-angular';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { QuizreviewComponent } from './quizreview/quizreview.component';
 import { TopicdialogComponent } from './topicdialog/topicdialog.component';
-
-
-const config = {
-  clientId: '0oaifrq9yQym6Q3pj4x6',
-  issuer: 'https://dev-741648.okta.com/oauth2/default',
-  redirectUri: 'http://localhost:4200/implicit/callback',
-  scopes: ['openid', 'profile', 'email'],
-  pkce: true
-};
+import { AuthRoutingModule } from './auth-routing.module';
 
 @NgModule({
   declarations: [
@@ -42,9 +31,10 @@ const config = {
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    OktaAuthModule
+    OktaAuthModule,
+    AuthRoutingModule
   ],
-  providers: [{ provide: OKTA_CONFIG, useValue: config }],
+  providers: [],
   bootstrap: [AppComponent],
   entryComponents: [TopicdialogComponent]
 })
