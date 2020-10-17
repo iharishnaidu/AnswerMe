@@ -1,12 +1,15 @@
 <div class = "container">
     <div class = "row">
-        <div class="col-md-1">
-            <button mat-icon-button *ngIf="!isAuthenticated" (click)="oktaAuth.loginRedirect()">
+      <div class="col-md-2 mr-auto">
+        <h4>Answer Me</h4>
+      </div>
+        <div class="col-md-1 ml-auto" *ngIf="!isAuthenticated">
+            <button mat-icon-button (click)="oktaAuth.loginRedirect()">
                 <mat-icon>login</mat-icon>
             </button>
         </div>
-        <div class="col-md-1">
-            <button mat-icon-button *ngIf="isAuthenticated" (click)="oktaAuth.logout()">
+        <div class="col-md-1 ml-auto" *ngIf="isAuthenticated">
+            <button mat-icon-button (click)="oktaAuth.logout()">
                 <mat-icon>logout</mat-icon>
             </button>
         </div>

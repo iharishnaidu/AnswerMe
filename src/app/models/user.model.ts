@@ -1,8 +1,8 @@
 export class User
 {
     public sub? : string;
-    public given_name? : string;
-    public family_name? : string;
+    public givenName? : string;
+    public familyName? : string;
     public name? : string;
-    public preferred_username? : string;
+    public preferredUsername? : string;
 }

@@ -1,0 +1,7 @@
+h4 {
+  color: gray;
+  line-height: inherit;
+}
+.container {
+  max-width: 100%;
+}

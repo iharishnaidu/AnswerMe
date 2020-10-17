@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { QuestionnaireserviceService } from 'src/app/shared/services/questionnaireservice.service';
 import { MatDialog } from '@angular/material';
 import { TopicdialogComponent } from 'src/app/topicdialog/topicdialog.component';
+import { OktaAuthService } from '@okta/okta-angular';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-questionnaire',
@@ -18,9 +20,14 @@ import { TopicdialogComponent } from 'src/app/topicdialog/topicdialog.component'
 })
 export class QuestionnaireComponent implements OnInit {
 
-  constructor(private http: HttpClient, private questionnaireservice : QuestionnaireserviceService, private router: Router, public dialog: MatDialog) {
+  constructor(private http: HttpClient, private oktaAuth: OktaAuthService, private questionnaireservice : QuestionnaireserviceService, private router: Router, public dialog: MatDialog) {
   }
 
+  user: User = new User();
+
+  temp: any;
+
+  isAuthenticated: boolean;
   questionnaireObj: Questionnaire = new Questionnaire();
   topicObj: Topic = new Topic();
   questionnaireArr: Questionnaire[] = [];
@@ -48,7 +55,7 @@ export class QuestionnaireComponent implements OnInit {
   apiTopics: string = "https://answer-me.cfapps.io/topic/";
   //apiQuestions : string = "http://localhost:8080/questions/all";
 
-  ngOnInit() {
+  async ngOnInit() {
     this.isLastQues = false;
     this.isEnabledPrev = false;
     this.isEnabledNext = true;
@@ -61,6 +68,7 @@ export class QuestionnaireComponent implements OnInit {
     this.isReviewQuiz = false;
     this.selectedAnswerByQuesId = new Map();
     //this.loadTopics();
+    this.temp = await this.oktaAuth.getUser();
   }
 
   openTopicDialog()
@@ -165,6 +173,11 @@ export class QuestionnaireComponent implements OnInit {
         }
       }
     }
+    console.log(this.marksCounter);
+    console.log(this.noOfQues);
+    console.log(this.topicIDSelected);
+    this.user.sub = this.temp.sub;
+    console.log(this.user.sub);
     this.isEvaluated = true;
   }
 

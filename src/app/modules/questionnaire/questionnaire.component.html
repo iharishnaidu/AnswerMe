@@ -12,16 +12,16 @@
                 </mat-card-content> -->
                 <button class="topicBtn" (click)="openTopicDialog()">Select Topic</button>
             </mat-card>
-        </div>  
+        </div>
     </div>
     <div class="row" *ngIf="isTopicSelected && !isQuizStarted">
         <div class="col-md-12">
             <mat-card>
-                <mat-card-content>
-                    <button class="topicBtn" (click)="getQuestionsByTopic()" mat-raised-button>Start Quiz</button>
-                </mat-card-content>
+              <mat-card-content>
+                <button class="topicBtn" (click)="getQuestionsByTopic()" mat-raised-button>Start Quiz</button>
+              </mat-card-content>
             </mat-card>
-        </div>  
+        </div>
     </div>
     <div class="row" *ngIf="isStartQuizClicked">
         <div class="col-md-1">
@@ -39,12 +39,12 @@
                     </li>
                 </ul>
             </mat-card>
-            
+
             <button *ngIf="isLastQues && !isEvaluated" class="optionBtn" (click)="evaluateQuiz()" mat-raised-button>Evaluate</button>
 
             <mat-card *ngIf="isEvaluated">
                 <mat-card-content>
-                    Quiz complete. 
+                    Quiz complete.
                     <span>Score : {{marksCounter}}/{{noOfQues}}</span>
                     <button class="optionBtn" (click)="redirectToQuizHomepage()" mat-raised-button>Back to Quiz Homepage</button>
                     <button class="optionBtn" (click)="reviewQuiz()" mat-raised-button>Review Quiz</button>
@@ -60,10 +60,10 @@
                                 <span>{{option.optionText}}</span>
                                 <span *ngIf="option.answer"><mat-icon>done</mat-icon></span>
                             </li>
-                        </ul> 
+                        </ul>
                     </mat-card>
                 </div>
-            </div>           
+            </div>
         </div>
         <div class="col-md-1">
             <button *ngIf="!isLastQues" mat-icon-button (click)="goNext()" [disabled]="!isEnabledNext">
